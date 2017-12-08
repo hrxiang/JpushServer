@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.jpush.mapper.LoggerMapper">
+	<insert id="addLogger" parameterType="com.mb.jpush.model.Logger">
+
+		INSERT INTO jpush_logger
+		(
+		alert,logger_type,recipient_type,target_android,target_ios,
+		delivery_type,delivery_time,time_to_live,status,reason
+		)
+		VALUES
+		(
+		#{alert},#{logger_type},#{recipient_type},#{target_android},#{target_ios},
+		#{delivery_type},#{delivery_time},#{time_to_live},#{status},#{reason}
+		);
+	</insert>
+
+	<!-- <delete id="deleteLogger" parameterType="com.mb.jpush.model.Logger"> 
+		delete from jpush_logger where id = #{id} </delete> -->
+
+	<!-- 批量删除 -->
+	<delete id="deleteLogger" parameterType="java.lang.String">
+		DELETE FROM jpush_logger where id in
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			${ids}
+		</foreach>
+	</delete>
+
+	<select id="queryLoggers" parameterType="Map"
+		resultType="com.mb.jpush.model.Logger">
+		select * from jpush_logger
+		where
+		recipient_type = ${recipient_type}
+		and logger_type = ${logger_type}
+		and
+		delivery_time between '${start_time}' and '${end_time}'
+		<if test="orderField != null and !orderField.equals('')">
+			order by ${orderField}
+			<if test="orderDirection != null and !orderDirection.equals('')">
+				${orderDirection}
+			</if>
+			<if test="orderDirection == null or orderDirection.equals('')">
+				DESC
+			</if>
+		</if>
+		<if test="orderField == null or orderField.equals('')">
+			order by id DESC
+		</if>
+		<if test="start !=  null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+
+
+	<select id="queryLoggersCount" parameterType="Map" resultType="int">
+		select count(*) from jpush_logger
+		where
+		recipient_type = ${recipient_type}
+		and logger_type = ${logger_type}
+		and
+		delivery_time between '${start_time}' and '${end_time}'
+	</select>
+
+</mapper>

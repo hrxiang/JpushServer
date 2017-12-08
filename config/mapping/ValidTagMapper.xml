@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.jpush.mapper.ValidTagMapper">
+
+	<insert id="addTags" parameterType="list">
+		INSERT INTO jpush_valid_tags(tag_,registration_id) VALUES
+		<foreach collection="list" separator="," item="validtag">
+			(#{validtag.tag_},#{validtag.registration_id})
+		</foreach>
+	</insert>
+
+	<delete id="deleteTagByRegistration_id" parameterType="String">
+		delete
+		from jpush_valid_tags where registration_id = #{registration_id}
+	</delete>
+
+	<delete id="deleteTagByTag_" parameterType="String">
+		delete from
+		jpush_valid_tags where tag_ = #{tag_}
+	</delete>
+
+
+	<select id="queryTag_s" parameterType="Map" resultType="String">
+		select distinct tag_ from jpush_valid_tags
+		<if test="start !=  null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="queryTag_sCount" resultType="int">
+		select count(distinct
+		tag_) from jpush_valid_tags
+	</select>
+
+</mapper>

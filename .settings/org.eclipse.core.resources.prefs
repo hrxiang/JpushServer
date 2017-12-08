@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/view/message.jsp=UTF-8
+encoding//WebRoot/WEB-INF/view/notification.jsp=UTF-8
+encoding//WebRoot/WEB-INF/view/tag/valid_tags.jsp=UTF-8
+encoding//src/com/mb/jpush/common/DwzResults.java=UTF-8
+encoding//src/com/mb/jpush/common/Timers.java=UTF-8
+encoding/<project>=UTF-8

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mb.jpush.mapper.TimerLoggerMapper">
+	<insert id="addTimerLogger" parameterType="com.mb.jpush.model.TimerLogger">
+
+		INSERT INTO
+		jpush_timer_logger
+		(
+		alert,logger_type,recipient_type,target_android,target_ios,
+		timer_time,device_tags,device_aliases,device_registrationids
+		)
+		VALUES
+		(
+		#{alert},#{logger_type},#{recipient_type},#{target_android},#{target_ios},
+		#{timer_time},#{device_tags},#{device_aliases},#{device_registrationids}
+		);
+	</insert>
+
+	<!-- 批量删除 -->
+	<delete id="deleteTimerLogger" parameterType="java.lang.String">
+		DELETE FROM jpush_timer_logger where timer_time in
+		<foreach item="time" collection="array" open="(" separator=","
+			close=")">
+			'${time}'
+		</foreach>
+	</delete>
+
+	<select id="queryTimerLoggers" parameterType="Map"
+		resultType="com.mb.jpush.model.TimerLogger">
+		select * from jpush_timer_logger
+		where
+		logger_type = ${logger_type}
+		<if test="orderField != null and !orderField.equals('')">
+			order by ${orderField}
+			<if test="orderDirection != null and !orderDirection.equals('')">
+				${orderDirection}
+			</if>
+			<if test="orderDirection == null or orderDirection.equals('')">
+				DESC
+			</if>
+		</if>
+		<if test="orderField == null or orderField.equals('')">
+			order by id DESC
+		</if>
+		<if test="start !=  null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+
+
+	<select id="queryTimerLoggersCount" parameterType="Map"
+		resultType="int">
+		select count(*) from jpush_timer_logger
+		where
+		logger_type =
+		${logger_type}
+	</select>
+
+
+	<select id="queryAll" resultType="com.mb.jpush.model.TimerLogger">
+		select * from
+		jpush_timer_logger
+	</select>
+</mapper>
